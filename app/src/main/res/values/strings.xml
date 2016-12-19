@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Distance Between Two Cities</string>
+    <string name="Home_city">Home city</string>
+    <string name="Destination_city">Destination city</string>
+</resources>
