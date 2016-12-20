@@ -2,4 +2,9 @@
     <string name="app_name">Distance Between Two Cities</string>
     <string name="Home_city">Home city</string>
     <string name="Destination_city">Destination city</string>
+
+    <string name="title_activity_map">map</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

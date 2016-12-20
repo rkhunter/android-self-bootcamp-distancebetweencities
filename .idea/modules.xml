@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/DistanceBetweenTwoCities.iml" filepath="$PROJECT_DIR$/DistanceBetweenTwoCities.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android-self-bootcamp-distancebetweencities.iml" filepath="$PROJECT_DIR$/android-self-bootcamp-distancebetweencities.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
