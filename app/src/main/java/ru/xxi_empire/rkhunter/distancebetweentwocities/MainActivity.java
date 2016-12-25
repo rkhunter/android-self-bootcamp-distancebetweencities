@@ -13,11 +13,14 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.concurrent.ExecutionException;
+
 import ru.xxi_empire.rkhunter.distancebetweentwocities.helpers.*;
 
 public class MainActivity extends AppCompatActivity {
 
     Intent intent;
+    Bundle args;
     InputMethodManager inputManager;
 
     AutoCompleteTextView autocompleteInputCity1;
@@ -41,10 +44,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         intent = new Intent(getBaseContext(), MapsActivity.class);
+        args = new Bundle();
+
         inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
         calculateButton = (Button) findViewById(R.id.button_calculate);
-        // calculateButton.setEnabled(false);
+        calculateButton.setEnabled(false);
 
 
         autocompleteInputCity1 = (AutoCompleteTextView) findViewById(R.id.input_city_1);
@@ -56,7 +61,13 @@ public class MainActivity extends AppCompatActivity {
                 // Get data associated with the specified position
                 // in the list (AdapterView)
                 String description = (String) parent.getItemAtPosition(position);
-                intent.putExtra("HOME_CITY", description);
+                try {
+                    args.putParcelable("HOME_CITY", new GeocodeAPI().execute(description).get());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
                 inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
                 checkInputGroup();
@@ -89,7 +100,13 @@ public class MainActivity extends AppCompatActivity {
                 // Get data associated with the specified position
                 // in the list (AdapterView)
                 String description = (String) parent.getItemAtPosition(position);
-                intent.putExtra("DESTINATION_CITY", description);
+                try {
+                    args.putParcelable("DESTINATION_CITY", new GeocodeAPI().execute(description).get());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
                 inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
             }
@@ -115,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
         calculateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                intent.putExtra("bundle", args);
                 startActivity(intent);
             }
         });

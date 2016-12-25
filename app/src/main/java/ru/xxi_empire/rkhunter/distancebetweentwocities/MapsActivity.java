@@ -1,7 +1,11 @@
 package ru.xxi_empire.rkhunter.distancebetweentwocities;
 
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -9,15 +13,22 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import ru.xxi_empire.rkhunter.distancebetweentwocities.helpers.Calculator;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    Calculator _calculator;
+    TextView distanceLabel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        _calculator = new Calculator();
+        distanceLabel = (TextView) findViewById(R.id.distance_label);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -37,10 +48,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        Bundle bundle = getIntent().getParcelableExtra("bundle");
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        LatLng HOME_CITY = bundle.getParcelable("HOME_CITY");
+        if (HOME_CITY != null) {
+            mMap.addMarker(new MarkerOptions().position(HOME_CITY).title("Home city"));
+        }
+
+
+        LatLng DESTINATION_CITY = bundle.getParcelable("DESTINATION_CITY");
+        if (DESTINATION_CITY != null) {
+            mMap.addMarker(new MarkerOptions().position(DESTINATION_CITY).title("Destination city"));
+        }
+
+        if (HOME_CITY != null && DESTINATION_CITY != null) {
+            PolylineOptions line = new PolylineOptions().add(HOME_CITY, DESTINATION_CITY).width(20).color(Color.RED);
+            mMap.addPolyline(line);
+            distanceLabel.setText(Integer.toString((int) _calculator.Distance(HOME_CITY, DESTINATION_CITY)/1000) + "km");
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(_calculator.Midpoint(HOME_CITY,DESTINATION_CITY)));
+        }
     }
 }
